@@ -1,6 +1,7 @@
 Theorem compile_correct : forall e,
   progDenote (compile e) nil = Some (expDenote e :: nil).
 Abort.
+
 Lemma compile_correct' : forall e p s,
   progDenote (compile e ++ p) s = progDenote p (expDenote e :: s).
   induction e.

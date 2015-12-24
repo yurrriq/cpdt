@@ -231,7 +231,7 @@ Abort.
  #+END_SRC
 
  #+NAME: compile_correct'
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+ #+BEGIN_SRC coq :exports both :padline yes :tangle ../code/compile_correct.v
 Lemma compile_correct' : forall e p s,
   progDenote (compile e ++ p) s = progDenote p (expDenote e :: s).
  #+END_SRC
