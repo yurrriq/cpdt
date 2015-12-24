@@ -1,0 +1,2 @@
+* Reading "Certified Programming with Dependent Types"
+- [[http://yurrriq.codes/cpdt/StackMachine.html][StackMachine]]
