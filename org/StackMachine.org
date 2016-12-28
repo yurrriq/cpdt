@@ -21,6 +21,8 @@ language and body of a code block and returns nil if lang is
 (setq-local org-confirm-babel-evaluate
             (lambda (lang body)
               (not (string= lang "coq"))))
+
+(setq org-src-preserve-indentation t)
 #+END_SRC
 
 #+NAME: initial-setup
@@ -70,57 +72,57 @@ Tangle and publish.
   :results:  code
   :END:
 ** binop datatype
- #+NAME: binop
- #+BEGIN_SRC coq :exports both
+#+NAME: binop
+#+BEGIN_SRC coq :exports both
 Inductive binop : Set := Plus | Times.
- #+END_SRC
+#+END_SRC
 
 ** Arithmetic expression
- #+NAME: exp
- #+BEGIN_SRC coq :exports both
+#+NAME: exp
+#+BEGIN_SRC coq :exports both
 Inductive exp : Set :=
 | Const : nat   -> exp
 | Binop : binop -> exp -> exp -> exp.
- #+END_SRC
+#+END_SRC
 
 ** The Meaning of a Binary Operator (binop)
- #+NAME: binopDenote
- #+BEGIN_SRC coq :exports both
+#+NAME: binopDenote
+#+BEGIN_SRC coq :exports both
 Definition binopDenote (b : binop) : nat -> nat -> nat :=
   match b with
     | Plus  => plus
     | Times => mult
   end.
- #+END_SRC
+#+END_SRC
 
 ** The Meaning of an expression
- #+NAME: expDenote
- #+BEGIN_SRC coq :exports both
+#+NAME: expDenote
+#+BEGIN_SRC coq :exports both
 Fixpoint expDenote (e : exp) : nat :=
   match e with
     | Const n       => n
     | Binop b e1 e2 => (binopDenote b) (expDenote e1) (expDenote e2)
   end.
- #+END_SRC
+#+END_SRC
 
 ** Test Evaluations
    :PROPERTIES:
    :noweb:    yes
    :END:
- #+NAME: exp-forty-two
- #+BEGIN_SRC coq :exports both
+#+NAME: exp-forty-two
+#+BEGIN_SRC coq :exports both
 Eval simpl in expDenote <<forty-two>>.
- #+END_SRC
+#+END_SRC
 
- #+NAME: exp-two-plus-two
- #+BEGIN_SRC coq :exports both
+#+NAME: exp-two-plus-two
+#+BEGIN_SRC coq :exports both
 Eval simpl in expDenote <<two-plus-two>>.
- #+END_SRC
+#+END_SRC
 
- #+NAME: exp-two-plus-two-times-seven
- #+BEGIN_SRC coq :exports both
+#+NAME: exp-two-plus-two-times-seven
+#+BEGIN_SRC coq :exports both
 Eval simpl in expDenote <<two-plus-two-times-seven>>.
- #+END_SRC
+#+END_SRC
 
 * Target Language
   :PROPERTIES:
@@ -211,117 +213,117 @@ Eval simpl in progDenote (compile <<forty-two>>) nil.
 Eval simpl in progDenote (compile <<two-plus-two>>) nil.
  #+END_SRC
 
- #+NAME: run-compiled-two-plus-two-times-seven
- #+BEGIN_SRC coq :exports both
+#+NAME: run-compiled-two-plus-two-times-seven
+#+BEGIN_SRC coq :exports both
 Eval simpl in progDenote (compile <<two-plus-two-times-seven>>) nil.
- #+END_SRC
+#+END_SRC
 
 ** Translation Correctness
    :PROPERTIES:
    :padline:  no
    :END:
- #+NAME: compile_correct
- #+BEGIN_SRC coq :tangle ../code/compile_correct.v :exports both
+#+NAME: compile_correct
+#+BEGIN_SRC coq :tangle ../code/compile_correct.v :exports both
 Theorem compile_correct : forall e,
-  progDenote (compile e) nil = Some (expDenote e :: nil).
- #+END_SRC
+    progDenote (compile e) nil = Some (expDenote e :: nil).
+#+END_SRC
 
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
 Abort.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'
- #+BEGIN_SRC coq :exports both :padline yes :tangle ../code/compile_correct.v
+#+NAME: compile_correct'
+#+BEGIN_SRC coq :exports both :padline yes :tangle ../code/compile_correct.v
 Lemma compile_correct' : forall e p s,
-  progDenote (compile e ++ p) s = progDenote p (expDenote e :: s).
- #+END_SRC
+    progDenote (compile e ++ p) s = progDenote p (expDenote e :: s).
+#+END_SRC
 
- #+NAME: compile_correct'-1
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-1
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   induction e.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-2
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-2
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   intros.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-3
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-3
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   unfold compile.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-4
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-4
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   unfold expDenote.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-5
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-5
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   unfold progDenote at 1.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-6
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-6
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   simpl.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-7
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-7
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   fold progDenote.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-8
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-8
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   reflexivity.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-9
- #+BEGIN_SRC coq :exports both :padline yes :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-9
+#+BEGIN_SRC coq :exports both :padline yes :tangle ../code/compile_correct.v
   intros.
   unfold compile.
   fold compile.
   unfold expDenote.
   fold expDenote.
- #+END_SRC
+#+END_SRC
 
- #+NAME: check-app_assoc_reverse
- #+BEGIN_SRC coq :exports both
+#+NAME: check-app_assoc_reverse
+#+BEGIN_SRC coq :exports both
 Check app_assoc_reverse.
- #+END_SRC
+#+END_SRC
 
- #+NAME: searchrewrite-app_assoc_reverse
- #+BEGIN_SRC coq :exports both
+#+NAME: searchrewrite-app_assoc_reverse
+#+BEGIN_SRC coq :exports both
 SearchRewrite ((_ ++ _) ++ _).
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-10
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-10
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   rewrite app_assoc_reverse.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-11
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-11
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   rewrite IHe2.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-12
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-12
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   rewrite app_assoc_reverse.
   rewrite IHe1.
- #+END_SRC
+#+END_SRC
 
- #+NAME: compile_correct'-13
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+NAME: compile_correct'-13
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
   unfold progDenote at 1.
   simpl.
   fold progDenote.
   reflexivity.
- #+END_SRC
+#+END_SRC
 
- #+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
+#+BEGIN_SRC coq :exports both :tangle ../code/compile_correct.v
 Abort.
- #+END_SRC
+#+END_SRC
 
 *** TODO Fix Incorrect Qed. Output
  #+NAME: compile_correct'-final
