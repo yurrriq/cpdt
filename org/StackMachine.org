@@ -46,8 +46,8 @@ Tangle and publish.
   ;; Tangle this file.
   (org-babel-tangle-publish nil (buffer-file-name) "../docs/code/")
 
-  ;; Publish the "cpdt" project.
-  (org-publish-project "cpdt")
+  ;; Publish the "cpdt-site" project.
+  (org-publish-project "cpdt-site")
   "We did it!")
 #+END_SRC
 
