@@ -325,11 +325,14 @@ SearchRewrite ((_ ++ _) ++ _).
 Abort.
 #+END_SRC
 
-*** TODO Fix Incorrect Qed. Output
- #+NAME: compile_correct'-final
- #+BEGIN_SRC coq :exports both
+#+NAME: compile_correct'-final
+#+BEGIN_SRC coq :exports both :results silent
 Lemma compile_correct' : forall e s p, progDenote (compile e ++ p) s =
   progDenote p (expDenote e :: s).
   induction e; crush.
 Qed.
- #+END_SRC
+#+END_SRC
+
+#+BEGIN_SRC coq
+compile_correct' is defined
+#+END_SRC
