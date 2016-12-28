@@ -9,7 +9,7 @@
 
 (let ((project              "cpdt")
       (base-directory       "~/src/yurrriq/cpdt/org/")
-      (publishing-directory "~/src/yurrriq/cpdt/_site/"))
+      (publishing-directory "~/src/yurrriq/cpdt/docs/"))
   (add-to-list
    'org-publish-project-alist
    `(,project

@@ -44,7 +44,7 @@ Tangle and publish.
   (load-file "../cpdt.el")
 
   ;; Tangle this file.
-  (org-babel-tangle-publish nil (buffer-file-name) "../_site/code/")
+  (org-babel-tangle-publish nil (buffer-file-name) "../docs/code/")
 
   ;; Publish the "cpdt" project.
   (org-publish-project "cpdt")
